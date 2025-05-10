@@ -1,0 +1,174 @@
+# Practical 3 :- Perform the following operations using Python on the Facebook metrics data sets 
+                 # a. Create data subsets
+                 # b. Merge Data
+                 # c. Sort Data
+                 # d. Transposing Data
+                 # e. Shape and reshape Data
+
+
+# Importing required libraries
+import pandas as pd
+import numpy as np
+
+# Import the data
+df=pd.read_csv("Facebook Metrics of Cosmetic Brand.csv")
+
+df.head()
+
+df.shape
+
+# Creating a subset by selecting specific columns by their name
+subset_1=df[['Category','Post Month','Post Weekday','Post Hour','Paid']]
+
+subset_1
+
+
+# Creating a subset by filtering a row
+subset_2=df[df['Total Interactions']>500.0]
+
+subset_2
+
+subset_2.shape
+
+# Creating a subset by selecting specific rows and columns
+subset_3=df.loc[df['Total Interactions']>500,['Type','Paid']]
+
+subset_3
+
+subset_3.shape
+
+
+# Creating a subset by index range
+subset_4=df.iloc[10:20]
+
+
+subset_4
+
+
+subset_4.shape
+
+# Creating a subset by randomly sampling 10% of the data
+subset_5=df.sample(frac=0.1,random_state=1)
+
+
+subset_5
+
+
+subset_5.shape
+
+
+# Creating a subset based on multiple conditions
+subset_6=df[(df['Total Interactions']>500)&(df['Paid']<1)]
+
+subset_6
+
+
+subset_6.shape
+
+
+# Creating a subset by selecting rows
+submerge_1=df[['Total Interactions','share']].loc[0:4]
+
+
+submerge_1
+
+
+submerge_2=df[['share','like']].loc[3:7]
+
+submerge_2
+
+# Merging data using inner join
+merge_inner=pd.merge(submerge_1,submerge_2,on='share',how='inner')
+
+merge_inner
+
+
+# Merging data using outer join
+merge_outer=pd.merge(submerge_1,submerge_2,on='share',how='outer')
+
+merge_outer
+
+
+# Merging data using left join
+merge_left=pd.merge(submerge_1,submerge_2,on='share',how='left')
+
+
+merge_left
+
+
+# Merging data using right join
+merge_right=pd.merge(submerge_1,submerge_2,on='share',how='right')
+
+
+
+merge_right
+
+
+# Sorting by one column in ascending order
+sort_single_asc=df.sort_values(by='Total Interactions',ascending=True)
+
+
+sort_single_asc
+
+
+# Sorting by one column in descending order
+sort_single_dsc=df.sort_values(by='Total Interactions',ascending=False)
+
+
+sort_single_dsc
+
+
+# Sorting by multiple columns, specifying ascending or descending for each
+sort_multiple=df.sort_values(by=['share','Total Interactions'],ascending=[True,False])
+
+
+sort_multiple
+
+
+# Sorting data by row index
+sort_index=df.sort_index(axis=0,ascending=False)
+
+
+sort_index
+
+
+# Original data
+df
+
+# Transposing data
+df_transposed=df.transpose()
+
+
+df_transposed
+
+
+df.shape
+
+
+# Reshaping data by using melt
+df_melt=df.melt(id_vars=['Paid'],value_vars=['Type','Category'])
+
+
+df_melt
+
+
+# Reshaping data by using pivot
+df_pivot=df_melt.pivot_table(index='Paid',columns='variable',values='value',aggfunc='first')
+
+
+df_pivot
+
+
+# Reshaping data using stack
+df_stacked = df.stack()
+
+
+df_stacked
+
+
+# Reshaping data using unstack
+df_unstacked=df.unstack()
+
+df_unstacked
+
+

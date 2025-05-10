@@ -1,0 +1,91 @@
+# Practical 6 : Visualize the data using Python libraries matplotlib, seaborn by plotting the graphs for airquality dataset.
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+
+df2=pd.read_excel('airquality_data.xlsx')
+
+
+df2.head()
+
+
+df2.columns
+
+
+sns.barplot(x='state',y='so2',data=df2)
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+
+
+
+sns.barplot(x='state',y='so2',data=df2,estimator=np.std)
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+
+
+
+# Count Plot
+sns.countplot(x='state',data=df2)
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+
+
+
+
+# Box Plot
+sns.boxplot(x='state',y='so2',data=df2)
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+
+
+
+# Violin Plot
+sns.violinplot(x='state',y='so2',data=df2)
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+
+
+
+
+sns.distplot(x=df2['no2'],bins=10)
+
+
+
+sns.distplot(df2['so2'],bins=10,kde=False)
+
+
+
+# For Plot 1
+sns.jointplot(x=df2['so2'],y=df2['state'],kind='scatter')
+
+
+
+sns.rugplot(df2['so2'])
+
+
+
+#  Strip Plot
+sns.stripplot(y='so2',x='state',data=df2,jitter= False)
+# Rotate x-axis labels for better visibility
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+
+
+
+

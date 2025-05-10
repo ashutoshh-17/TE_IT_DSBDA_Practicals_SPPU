@@ -1,0 +1,82 @@
+# Practical 8: Create a review scrapper for any ecommerce website to fetch real time comments, reviews, ratings, comment tags, customer name using Python.
+
+
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import time
+
+
+
+# Base URL (without page number, which we'll add)
+base_url = "https://www.flipkart.com/apple-iphone-13-blue-128-gb/product-reviews/itm6c601e0a58b3c?page={}&pid=MOBG6VF5SMXPNQHG"
+
+
+
+request1 = requests.get('https://www.flipkart.com/apple-iphone-13-blue-128-gb/p/itm6c601e0a58b3c?pid=MOBG6VF5SMXPNQHG&lid=LSTMOBG6VF5SMXPNQHGL5FN51&marketplace=FLIPKART&q=iphone&store=tyy%2F4io&srno=s_1_1&otracker=search&otracker1=search&fm=organic&iid=879c0b11-c620-4bc7-bda0-ed28e3da8540.MOBG6VF5SMXPNQHG.SEARCH&ppt=clp&ppn=samsung-mobile-store&ssid=jjk9t92he80000001744810813121&qH=0b3f45b266a97d70')
+request1
+
+
+
+
+# Data containers
+data = []
+
+
+
+
+
+
+
+# Loop through first pages
+for page in range(1, 2):
+    print(f"Fetching page {page}...")
+    url = base_url.format(page)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
+    
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'html.parser')
+    
+    # Extracting data
+    names = soup.find_all('p', class_='_2NsDsF AwS1CA')  # customer names
+    reviews = soup.find_all('div', class_='ZmyHeo')      # review text
+    ratings = soup.find_all('div', class_='XQDdHH Ga3i8K')  # rating stars
+    
+    for name, review, rating in zip(names, reviews, ratings):
+        data.append({
+            'Customer Name': name.get_text(strip=True),
+            'Rating': rating.get_text(strip=True),
+            'Review': review.get_text(strip=True)
+        })
+    
+    time.sleep(2)  # Be polite and avoid getting blocked
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+
+
+
+
+
+
+
+
+
+
+
+
+# Show customer-wise output
+for i, row in df.iterrows():
+    print(f"Customer: {row['Customer Name']}")
+    print(f"Rating: {row['Rating']}")
+    print(f"Review: {row['Review']}\n")
+
+
+
+
+
+# Export to CSV
+df.to_csv('reviews.csv', index=False)
+print("\n✅ Data saved to reviews.csv")

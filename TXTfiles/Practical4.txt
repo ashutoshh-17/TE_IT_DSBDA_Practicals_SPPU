@@ -1,0 +1,109 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+
+
+df = pd.read_csv("Heart.csv")
+
+df.head()
+
+
+# a) Data Cleaning
+df = df.drop_duplicates()
+
+
+# Count ,min,max ,etc of each column
+df.describe()
+
+
+# Information about each column data
+df.info()
+
+
+#Finding null values in each column
+df.isna().sum()
+
+# b) Data Integration
+df.fbs.unique()
+
+df1 = df[['age','cp','chol','thalachh']]
+
+
+
+df2 = df[['exng','slp','output']]
+
+merging=pd.concat([df1,df2],axis=1)
+merging
+
+# d) Error Correcting
+df.columns
+
+# Function to Remove Outliers
+def remove_outliers(column):
+    Q1 = column.quantile(0.25)
+    Q3 = column.quantile(0.75)
+    IQR = Q3 - Q1
+    threshold = 1.5 * IQR
+    outlier_mask = (column < Q1 - threshold) | (column > Q3 + threshold)
+    return column[~outlier_mask]
+    
+# Remove outliers for each column using a loop
+col_name = ['cp','thalachh','exng','oldpeak','slp','caa']
+for col in col_name:
+    df[col] = remove_outliers(df[col])
+    
+    
+# Dropping Null Values after Outlier Removal
+df = df.dropna()
+
+# Dropping Unnecessary Column
+df = df.drop('fbs',axis=1)
+
+# splitting data using train test split
+x = df[['cp','thalachh','exng','oldpeak','slp','caa']]
+y = df.output
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=0)
+x_train.shape,x_test.shape,y_train.shape,y_test.shape
+
+
+# c) Data transformation
+from sklearn.preprocessing import StandardScaler
+
+
+
+scaler = StandardScaler()
+
+
+
+x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled = scaler.transform(x_test)
+
+
+
+# e) Data model building
+model = LogisticRegression()
+model.fit(x_train_scaled, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(x_test_scaled)
+
+# Evaluate the model's accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Logistic Regression Accuracy:", accuracy)
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Classification model using Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+dtc=DecisionTreeClassifier(criterion='entropy')
+dtc.fit(x_train_scaled,y_train)
+y_pred_dtc=dtc.predict(x_test_scaled)
+
+print("Decision Tree Accuracy:", accuracy_score(y_test, y_pred_dtc))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred_dtc))
+print("Classification Report:\n", classification_report(y_test, y_pred_dtc))
+
+

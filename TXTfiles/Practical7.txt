@@ -1,0 +1,145 @@
+# Practical 7 : Visualize the data using Python libraries matplotlib, seaborn by plotting the graphs for heart.csv dataset.
+
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+
+
+df=pd.read_csv('heart.csv')
+
+
+
+
+df.columns
+
+
+
+
+df
+
+
+
+
+# Bar Plot
+sns.barplot(x='sex',y='chol',data=df)
+
+
+
+
+sns.barplot(x='sex',y='chol',data=df,estimator=np.std)
+
+
+
+
+
+# Count Plot
+sns.countplot(x='sex',data=df)
+
+
+
+
+# Box Plot
+sns.boxplot(x='sex',y='chol',data=df)
+
+
+
+
+
+# Violin Plot
+sns.violinplot(x='sex',y='chol',data=df)
+
+
+
+
+
+sns.violinplot(x='sex',y='chol',data=df,hue='cp')
+
+
+
+
+
+
+sns.distplot(x=df['thalachh'],bins=10)
+
+
+
+
+sns.distplot(df['thalachh'],bins=10,kde=False)
+
+
+
+
+# Joint Plot
+sns.jointplot(x=df['thalachh'],y=df['sex'],kind='scatter')
+
+
+
+
+sns.jointplot(x=df['thalachh'],y=df['sex'],kind='hex')
+
+
+
+
+# The Rug Plot
+sns.rugplot(df['thalachh'])
+
+
+
+
+
+# Strip Plot
+sns.stripplot(y='thalachh',x='sex',data=df,jitter= False)
+
+
+
+
+
+sns.stripplot(y='thalachh',x='sex',data=df,jitter= True)
+
+
+
+
+
+sns.stripplot(x='sex',y='thalachh',data=df,jitter=True,hue='cp')
+
+
+
+
+
+# Swarm Plot
+sns.swarmplot(x='sex',y='thalachh',data=df)
+
+
+
+
+
+sns.swarmplot(x='sex',y='thalachh',data=df,hue='cp')
+
+
+
+
+
+df.corr()
+
+
+
+
+corr = df.corr()
+sns.heatmap(corr)
+plt.title('Correlation Heatmap')
+
+
+
+
+corr = df.corr()
+sns.heatmap(corr, annot=True)
+plt.title('Correlation Heatmap')
+
+
+
+
